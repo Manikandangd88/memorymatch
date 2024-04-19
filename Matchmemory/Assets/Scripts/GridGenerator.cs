@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GridGenerator : MonoBehaviour
 {
+    private int rows, columns = 0;
+
     // Start is called before the first frame update
     void Start()
     {
