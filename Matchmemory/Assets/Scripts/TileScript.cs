@@ -38,17 +38,48 @@ public class TileScript : MonoBehaviour
         if (!Flipped) 
         {
             Flipped = true;
+            //GameManager.instance.FlippedTiles.Add(this);
+            tileButton.interactable = false;
+
             transform.DOLocalRotate(new Vector2(0,180f), flipSpeed, RotateMode.Fast)
-                .OnComplete(()=> GameManager.instance.CompareTiles());
-            GameManager.instance.FlippedTiles.Add(this);
+                .OnComplete(OnTileFlipped);
         }
         else
         {
-            Flipped = false;
-            transform.DOLocalRotate(new Vector2(0, 0), flipSpeed, RotateMode.Fast);
+            //OnTileCanceled();
         }
 
         //Check if Tiles Match
 
+    }
+
+    public void OnTileFlipped()
+    {
+        GameManager.instance.AddToPair(this);
+    }
+
+    public void OnTileMatch()
+    {
+        GetComponent<Image>().enabled = false;
+        GetComponent<Button>().enabled = false;
+        this.enabled = false;
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(false);
+        }
+    }
+
+    private void OnTileCanceled()
+    {
+        GameManager.instance.CancelPair();
+        ResetTile();
+    }
+
+    public void ResetTile()
+    {
+        Flipped = false;
+        transform.DOLocalRotate(new Vector2(0, 0), flipSpeed, RotateMode.Fast)
+            .OnComplete(() => tileButton.interactable = true);
     }
 }
