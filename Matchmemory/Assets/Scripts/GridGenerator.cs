@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -49,15 +50,36 @@ public class GridGenerator : MonoBehaviour
     public void GenerateTheGrid()
     {
         GameObject go = null;
+        
 
         for (int i = 0; i < currentRows; i++)
         {
             for(int j = 0; j < currentColumns; j++)
-            {
+            {         
                 go = Instantiate(tilePrefab, tileSpawnParent, false);
+                GameManager.instance.TileScriptList.Add(go.GetComponent<TileScript>());
+                
             }
         }
+
+        SetTheTileAttributes();
     }
 
-    
+    public void SetTheTileAttributes()
+    {
+        int tempmaxtile = currentRows * currentColumns;
+        int temptileid = 0;
+
+        for (int i = 0; i < tempmaxtile; i+=2)
+        {
+            for(int j = i;j < i+2; j++)
+            {    
+                GameManager.instance.TileScriptList[j].ID = temptileid;
+                GameManager.instance.TileScriptList[j].name = temptileid.ToString();
+
+                GameManager.instance.TileScriptList[j].transform.SetSiblingIndex(Random.Range(0, tempmaxtile));
+            }
+            temptileid++;            
+        }
+    }    
 }

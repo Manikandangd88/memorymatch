@@ -1227,8 +1227,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4254d3898413be347845e5d8fc844537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rows: 0
-  columns: 0
+  currentRows: 0
+  currentColumns: 0
   tilePrefab: {fileID: 6080895826843309551, guid: 041d6575835bc104ea833e6cb58a9cfe, type: 3}
   tileSpawnParent: {fileID: 2099131059}
   gridLayoutComponent: {fileID: 2099131062}
@@ -2051,6 +2051,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiManager: {fileID: 873323855}
   gridGenerator: {fileID: 720287309}
+  TileScriptList: []
+  FlippedTiles: []
 --- !u!1 &1278877395
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
 
     public UIManager uiManager;
     public GridGenerator gridGenerator;
+
+    public List<TileScript> TileScriptList = new List<TileScript>();
+    public List<TileScript> FlippedTiles = new List<TileScript>();
     
     #endregion
 
@@ -43,5 +46,16 @@ public class GameManager : MonoBehaviour
     private void InitializeGame()
     {
         uiManager.FetchRowsAndColumnsUI.SetActive(true);
+    }
+
+    public void CompareTiles()
+    {
+        if(FlippedTiles.Count > 0)
+        {
+            if (FlippedTiles[0].ID == FlippedTiles[0].ID)
+            {
+                FlippedTiles[0].gameObject.SetActive(false);
+            }
+        }
     }
 }
