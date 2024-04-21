@@ -9,10 +9,11 @@ public class TileScript : MonoBehaviour
     [SerializeField] private int id;
     [SerializeField] private float flipSpeed = 0;
     private bool Flipped = false;
-
+    private bool active = true;
     private Button tileButton;
 
     public int ID { get => id; set => id = value; }
+    public bool ActiveStatus { get => active; set => active = value; }
 
     private void Awake()
     {
@@ -62,7 +63,9 @@ public class TileScript : MonoBehaviour
     {
         GetComponent<Image>().enabled = false;
         GetComponent<Button>().enabled = false;
+
         this.enabled = false;
+        ActiveStatus = false;
 
         for (int i = 0; i < transform.childCount; i++)
         {
