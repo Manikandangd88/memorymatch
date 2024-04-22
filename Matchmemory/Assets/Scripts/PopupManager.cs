@@ -40,6 +40,9 @@ public class PopupManager : MonoBehaviour
             case "initcomment":
                 feedbackTextComponent.text = "Maximum allowed rows and colums is 6 x 5";
                 break;
+            case "oddmatrix":
+                feedbackTextComponent.text = $"{GameManager.instance.gridGenerator.Rows} X {GameManager.instance.gridGenerator.Columns} not allowed";
+                break;
                 default:
                 break;
         }

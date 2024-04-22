@@ -155,11 +155,15 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        if(GameManager.instance.gridGenerator.Rows <= 6 && GameManager.instance.gridGenerator.Columns <= 5)
-        {
+        GameManager.instance.TotalTiles = GameManager.instance.gridGenerator.Rows * GameManager.instance.gridGenerator.Columns;
 
+        if (GameManager.instance.TotalTiles % 2 != 0)
+        {
+            GameManager.instance.popupManager.ShowFeedback("oddmatrix");
+            return;
         }
-        else
+
+        if (GameManager.instance.gridGenerator.Rows > 6 || GameManager.instance.gridGenerator.Columns > 5)
         {
             GameManager.instance.popupManager.ShowFeedback("initcomment");
             return;
@@ -169,6 +173,7 @@ public class UIManager : MonoBehaviour
         GameManager.instance.gridGenerator.GenerateTheGrid();
         //mainMenuBtn.gameObject.SetActive(true);
 
+        scoreText.text = $"Score : {0}";
         rows.text = string.Empty;
         columns.text = string.Empty;
         saveBtn.gameObject.SetActive(true);

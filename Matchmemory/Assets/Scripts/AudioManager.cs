@@ -63,7 +63,7 @@ public class AudioManager : MonoBehaviour
                 audioSource.PlayOneShot(positiveFeedback, feedbackaudioScaler);
                 break; 
             case 1:
-                audioSource.PlayOneShot(negativeFeedback, feedbackaudioScaler);
+                audioSource.PlayOneShot(negativeFeedback, 6f);
                 break;
             case 2:
                 audioSource.PlayOneShot(LevelCompleted, feedbackaudioScaler);
