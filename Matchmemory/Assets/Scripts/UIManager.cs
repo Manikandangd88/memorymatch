@@ -67,8 +67,12 @@ public class UIManager : MonoBehaviour
                 mainMenuBtn.gameObject.SetActive(true);
                 break;
             case "quit":
-                mainMenuUI.SetActive(false);
-                Application.Quit();
+#if UNITY_EDITOR
+                
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif               
                 break;
             default:
                 break;
@@ -97,6 +101,9 @@ public class UIManager : MonoBehaviour
     /// <param name="value"></param>
     public void SetRowsAndColumns(int value) // 0 for row ------ 1 for column
     {
+        if (!rows.IsActive() || !columns.IsActive())
+            return;
+
         if (value == 0) 
         {
             GameManager.instance.gridGenerator.Rows = int.Parse(rows.text);
@@ -124,9 +131,18 @@ public class UIManager : MonoBehaviour
 
     private void OnSubmitPressed()
     {
+        if(rows.text == string.Empty || columns.text == string.Empty)
+        {
+            GameManager.instance.popupManager.ShowFeedback("submiterror");
+            return;
+        }
+
         FetchRowsAndColumnsUI.SetActive(false);
         GameManager.instance.gridGenerator.GenerateTheGrid();
         mainMenuBtn.gameObject.SetActive(true);
+
+        rows.text = string.Empty;
+        columns.text = string.Empty;
     }
 
     //private void GoToMainMenu()

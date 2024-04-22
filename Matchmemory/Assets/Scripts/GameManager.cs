@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
 
     public DataStore dataStore;
 
+    public PopupManager popupManager;
+
+    [SerializeField] private AudioManager audioManager;
+
     public List<TileScript> TileScriptList = new List<TileScript>();
 
     public static Action DestroyTiles;
@@ -73,11 +77,13 @@ public class GameManager : MonoBehaviour
             //while (FlippedTiles[0] && )
             if (tileX.ID == tileY.ID)
             {
+                audioManager.PlayFeedbackAudio(true);
                 tileX.OnTileMatch();
                 tileY.OnTileMatch();
             }
             else
             {
+                audioManager.PlayFeedbackAudio(false);
                 tileX.ResetTile();
                 tileY.ResetTile();
             }
@@ -93,8 +99,6 @@ public class GameManager : MonoBehaviour
         gridGenerator.Rows = 0;
         gridGenerator.Columns = 0;
         uiManager.mainMenuBtn.gameObject.SetActive(false);
-        //GameManager.instance.dataStore.ResetGameData();
-        //DestroyTiles?.Invoke();
 
         for(int i = 0;i < TileScriptList.Count;i++)
         {
