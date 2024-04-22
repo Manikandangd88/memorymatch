@@ -34,6 +34,9 @@ public class PopupManager : MonoBehaviour
             case "submiterror":
                 feedbackTextComponent.text = "Fields Cannot Be Empty";                
                 break;
+            case "loaddata":
+                feedbackTextComponent.text = "No saved data";
+                break;
                 default:
                 break;
         }

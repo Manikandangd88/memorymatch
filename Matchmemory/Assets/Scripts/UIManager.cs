@@ -18,6 +18,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button newBtn;
     [SerializeField] private Button loadBtn;
     [SerializeField] private Button quitBtn;
+    [SerializeField] private Button saveBtn;
+
+    [SerializeField] private TextMeshProUGUI scoreText = null;
 
     public Button mainMenuBtn;
 
@@ -25,13 +28,13 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        InitializeGame();
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        InitializeGame();
     }
 
     // Update is called once per frame
@@ -48,8 +51,14 @@ public class UIManager : MonoBehaviour
         newBtn.onClick.AddListener(() => { MainMenu("new"); });
         loadBtn.onClick.AddListener(() => { MainMenu("load"); });
         quitBtn.onClick.AddListener(() => { MainMenu("quit"); });
+        saveBtn.onClick.AddListener(() => { MainMenu("save"); });
+
+
         //quitBtn.onClick.AddListener(() => SceneManager.LoadScene("SampleScene"));
         mainMenuBtn.onClick.AddListener(() => StartCoroutine(GoToMainMenu()));
+
+        if(GameManager.instance.dataStore.IsGameDataSaved) { loadBtn.interactable = true; }
+        else { loadBtn.interactable = false;}
     }
 
     private void MainMenu(string btn)
@@ -62,13 +71,20 @@ public class UIManager : MonoBehaviour
                 FetchRowsAndColumnsUI.SetActive(true);
                 break;
             case "load":
+                if (!GameManager.instance.dataStore.IsGameDataSaved)
+                    return;
+                
                 mainMenuUI.SetActive(false);
                 GameManager.instance.dataStore.LoadData();
                 mainMenuBtn.gameObject.SetActive(true);
+                saveBtn.gameObject.SetActive(true);
+                scoreText.gameObject.SetActive(true);
+                break;
+            case "save":
+                GameManager.instance.dataStore.SaveData();
                 break;
             case "quit":
-#if UNITY_EDITOR
-                
+#if UNITY_EDITOR                
                 UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
@@ -139,21 +155,42 @@ public class UIManager : MonoBehaviour
 
         FetchRowsAndColumnsUI.SetActive(false);
         GameManager.instance.gridGenerator.GenerateTheGrid();
-        mainMenuBtn.gameObject.SetActive(true);
+        //mainMenuBtn.gameObject.SetActive(true);
 
         rows.text = string.Empty;
         columns.text = string.Empty;
+        saveBtn.gameObject.SetActive(true);
+        scoreText.gameObject.SetActive(true);
     }
-
-    //private void GoToMainMenu()
+        
     private IEnumerator GoToMainMenu()
     {
-        //Save Game Data
-        GameManager.instance.dataStore.SaveData();
-        GameManager.instance.dataStore.IsGameDataSaved = false;
-        
-        yield return new WaitUntil(() => GameManager.instance.dataStore.IsGameSaved);
+        saveBtn.gameObject.SetActive(false);
+        scoreText.gameObject.SetActive(false);
+
+        if (GameManager.instance.isLevelCompleted)
+        {            
+            scoreText.text = $"Score : {GameManager.instance.Score}";
+            GameManager.instance.dataStore.ResetGameData();
+            loadBtn.interactable = false;
+            GameManager.instance.isLevelCompleted = false;  
+        }
+        else
+        {
+            GameManager.instance.dataStore.IsGameDataSaved = false;
+            loadBtn.interactable = true;
+            yield return new WaitUntil(() => GameManager.instance.dataStore.IsGameSaved);
+
+            
+        }
+
         //Restart GamePlay
+        GameManager.instance.dataStore.CheckIfGameDataAvailable();
         GameManager.instance.RestartGame();
+    }
+
+    public void DisplayScore()
+    {
+        scoreText.text = $"Score : {GameManager.instance.Score}";
     }
 }

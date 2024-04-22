@@ -16,13 +16,26 @@ public class DataStore : MonoBehaviour
 
     public bool IsGameSaved { get => isGameSaved; set => isGameSaved = value; }
 
+    private void OnEnable()
+    {
+        path = Application.persistentDataPath + "/playerdata.json";
+
+        //if (File.Exists(path))
+        CheckIfGameDataAvailable();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        path = Application.dataPath + "/playerdata.json";
+        
+    }
 
+    public void CheckIfGameDataAvailable()
+    {
         if (File.Exists(path))
             IsGameDataSaved = true;
+        else
+            IsGameDataSaved = false;
     }
 
     // Update is called once per frame
@@ -39,6 +52,7 @@ public class DataStore : MonoBehaviour
         gameData = new GameData();
         gameData.Rows = GameManager.instance.gridGenerator.Columns;
         gameData.Columns = GameManager.instance.gridGenerator.Rows;
+        gameData.Score = GameManager.instance.Score;
 
         for (int i = 0; i < ilimit; i++)
         {
@@ -89,6 +103,7 @@ public class DataStore : MonoBehaviour
     /// </summary>
     public void LoadData()
      {
+        Debug.Log("is game data available : " + GameManager.instance.dataStore.IsGameDataSaved);
         gameData = new GameData();
         string jsonstring = File.ReadAllText(path);
         IsGameDataSaved = true;
@@ -101,10 +116,11 @@ public class DataStore : MonoBehaviour
 
                 GameManager.instance.gridGenerator.Rows = gameData.Columns;
                 GameManager.instance.gridGenerator.Columns = gameData.Rows;
+                GameManager.instance.Score = gameData.Score;
 
                 GameManager.instance.uiManager.setGridLayoutProperties();
-                //StartCoroutine(GameManager.instance.gridGenerator.GenerateTheGrid());
                 GameManager.instance.gridGenerator.GenerateTheGrid();
+                GameManager.instance.uiManager.DisplayScore();
             }
             else
             {
@@ -134,7 +150,12 @@ public class DataStore : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        SaveData();
+        //SaveData();
+    }
+
+    private void OnDisable()
+    {
+        //SaveData();
     }
 }
 

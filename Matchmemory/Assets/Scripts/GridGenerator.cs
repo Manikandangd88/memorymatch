@@ -75,7 +75,7 @@ public class GridGenerator : MonoBehaviour
     {
         GameData gd = GameManager.instance.dataStore.gameData;
 
-        int tempmaxtile = currentRows * currentColumns;
+        int tempmaxtile = GameManager.instance.TotalTiles = currentRows * currentColumns;
         int temptileid = 0;
 
         if (GameManager.instance.dataStore.IsGameDataSaved)
@@ -108,5 +108,7 @@ public class GridGenerator : MonoBehaviour
                 temptileid++;
             }
         }
+
+        GameManager.instance.uiManager.mainMenuBtn.gameObject.SetActive(true);
     }    
 }

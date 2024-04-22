@@ -63,12 +63,14 @@ public class TileScript : MonoBehaviour
     }
 
     public void OnTileMatch()
-    {
+    {       
         GetComponent<Image>().enabled = false;
         GetComponent<Button>().enabled = false;
 
         this.enabled = false;
         ActiveStatus = false;
+
+        GameManager.instance.CheckLevelcompleted();
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -94,8 +96,4 @@ public class TileScript : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnDisable()
-    {
-        
-    }
 }

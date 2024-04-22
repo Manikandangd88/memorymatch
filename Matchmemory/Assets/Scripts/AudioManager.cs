@@ -9,6 +9,7 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] private AudioClip positiveFeedback = null;
     [SerializeField] private AudioClip negativeFeedback = null;
+    [SerializeField] private AudioClip LevelCompleted = null;
 
     //private Slider feedbackaudioScaler = null;
     [SerializeField] private float feedbackaudioScaler;
@@ -48,15 +49,28 @@ public class AudioManager : MonoBehaviour
         return audioClips_Bgms[Random.Range(0, audioClips_Bgms.Length)];
     }
 
-    public void PlayFeedbackAudio(bool status)
+    /// <summary>
+    /// 0 - tile matched feedback
+    /// 1 - tile unmatched feedback
+    /// 2 - Level completed feedback
+    /// </summary>
+    /// <param name="status"></param>
+    public void PlayFeedbackAudio(int status) 
     {
-        if(status)
+        switch(status)
         {
-            audioSource.PlayOneShot(positiveFeedback, feedbackaudioScaler);
+            case 0:
+                audioSource.PlayOneShot(positiveFeedback, feedbackaudioScaler);
+                break; 
+            case 1:
+                audioSource.PlayOneShot(negativeFeedback, feedbackaudioScaler);
+                break;
+            case 2:
+                audioSource.PlayOneShot(LevelCompleted, feedbackaudioScaler);
+                break;
+            default: break;
         }
-        else
-        {
-            audioSource.PlayOneShot(negativeFeedback, feedbackaudioScaler);
-        }
+
+        
     }
 }

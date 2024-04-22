@@ -24,7 +24,12 @@ public class GameManager : MonoBehaviour
 
     public static Action DestroyTiles;
 
-    public int Score = 0;    
+    public int Score = 0;
+    public int TotalTiles = 0;
+    public int tilesMatched = 0;
+
+    public bool isLevelCompleted = false;
+
 
     private void Awake()
     {
@@ -77,13 +82,15 @@ public class GameManager : MonoBehaviour
             //while (FlippedTiles[0] && )
             if (tileX.ID == tileY.ID)
             {
-                audioManager.PlayFeedbackAudio(true);
+                audioManager.PlayFeedbackAudio(0); // 0 for true
                 tileX.OnTileMatch();
                 tileY.OnTileMatch();
+                Score += 2;
+                uiManager.DisplayScore();
             }
             else
             {
-                audioManager.PlayFeedbackAudio(false);
+                audioManager.PlayFeedbackAudio(1); // 1 for false
                 tileX.ResetTile();
                 tileY.ResetTile();
             }
@@ -98,6 +105,8 @@ public class GameManager : MonoBehaviour
         
         gridGenerator.Rows = 0;
         gridGenerator.Columns = 0;
+        tilesMatched = 0;
+        TotalTiles = 0;
         uiManager.mainMenuBtn.gameObject.SetActive(false);
 
         for(int i = 0;i < TileScriptList.Count;i++)
@@ -110,5 +119,20 @@ public class GameManager : MonoBehaviour
 
         uiManager.MainMenuUI.SetActive(true);
         Debug.Log("inside the restart game end ******* ");
+    }
+
+    public void CheckLevelcompleted()
+    {
+        if(tilesMatched < TotalTiles)
+        {
+            tilesMatched ++;
+            Debug.Log("The tiles matched are : " + tilesMatched);
+        }
+        
+        if(tilesMatched == TotalTiles) 
+        {
+            isLevelCompleted = true;    
+            audioManager.PlayFeedbackAudio(2);
+        }
     }
 }
