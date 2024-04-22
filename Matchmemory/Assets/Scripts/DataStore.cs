@@ -33,9 +33,15 @@ public class DataStore : MonoBehaviour
     public void CheckIfGameDataAvailable()
     {
         if (File.Exists(path))
+        {
             IsGameDataSaved = true;
+            Debug.Log($"is game data saved : {IsGameDataSaved}");
+        }
         else
+        {
+            Debug.Log($"is game data saved in else : {IsGameDataSaved}");
             IsGameDataSaved = false;
+        }
     }
 
     // Update is called once per frame
@@ -46,6 +52,8 @@ public class DataStore : MonoBehaviour
 
     public void SaveData()
     {
+        if(GameManager.instance.isLevelCompleted) { return; }
+
         Transform tileparent = GameManager.instance.gridGenerator.TileSpawnParent;
         int ilimit = tileparent.childCount;
 

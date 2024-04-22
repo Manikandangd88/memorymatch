@@ -16,7 +16,7 @@ public class PopupManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        animator = popupObject.GetComponent<Animator>();
+        //animator = popupObject.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -36,6 +36,9 @@ public class PopupManager : MonoBehaviour
                 break;
             case "loaddata":
                 feedbackTextComponent.text = "No saved data";
+                break;
+            case "initcomment":
+                feedbackTextComponent.text = "Maximum allowed rows and colums is 6 x 5";
                 break;
                 default:
                 break;

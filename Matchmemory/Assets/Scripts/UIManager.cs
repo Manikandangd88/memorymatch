@@ -59,6 +59,7 @@ public class UIManager : MonoBehaviour
 
         if(GameManager.instance.dataStore.IsGameDataSaved) { loadBtn.interactable = true; }
         else { loadBtn.interactable = false;}
+        GameManager.instance.popupManager.ShowFeedback("initcomment");
     }
 
     private void MainMenu(string btn)
@@ -71,6 +72,7 @@ public class UIManager : MonoBehaviour
                 FetchRowsAndColumnsUI.SetActive(true);
                 break;
             case "load":
+                Debug.Log($"is game data available : {GameManager.instance.dataStore.IsGameDataSaved}");
                 if (!GameManager.instance.dataStore.IsGameDataSaved)
                     return;
                 
@@ -153,6 +155,16 @@ public class UIManager : MonoBehaviour
             return;
         }
 
+        if(GameManager.instance.gridGenerator.Rows <= 6 && GameManager.instance.gridGenerator.Columns <= 5)
+        {
+
+        }
+        else
+        {
+            GameManager.instance.popupManager.ShowFeedback("initcomment");
+            return;
+        }
+
         FetchRowsAndColumnsUI.SetActive(false);
         GameManager.instance.gridGenerator.GenerateTheGrid();
         //mainMenuBtn.gameObject.SetActive(true);
@@ -170,22 +182,25 @@ public class UIManager : MonoBehaviour
 
         if (GameManager.instance.isLevelCompleted)
         {            
-            scoreText.text = $"Score : {GameManager.instance.Score}";
+            scoreText.text = $"Score : {0}";
             GameManager.instance.dataStore.ResetGameData();
-            loadBtn.interactable = false;
+            //loadBtn.interactable = false;
             GameManager.instance.isLevelCompleted = false;  
         }
         else
         {
-            GameManager.instance.dataStore.IsGameDataSaved = false;
+            GameManager.instance.dataStore.IsGameDataSaved = true;
             loadBtn.interactable = true;
-            yield return new WaitUntil(() => GameManager.instance.dataStore.IsGameSaved);
-
-            
+            yield return new WaitUntil(() => GameManager.instance.dataStore.IsGameSaved);            
         }
 
         //Restart GamePlay
-        GameManager.instance.dataStore.CheckIfGameDataAvailable();
+        //GameManager.instance.dataStore.CheckIfGameDataAvailable();
+        if(GameManager.instance.dataStore.IsGameDataSaved)
+            loadBtn.interactable = true;
+        else
+            loadBtn.interactable = false;
+
         GameManager.instance.RestartGame();
     }
 
