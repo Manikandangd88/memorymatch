@@ -78,7 +78,7 @@ public class GridGenerator : MonoBehaviour
         int tempmaxtile = currentRows * currentColumns;
         int temptileid = 0;
 
-        if (GameManager.instance.dataStore.IsGameSaved)
+        if (GameManager.instance.dataStore.IsGameDataSaved)
         {
             for(int i = 0; i < TileSpawnParent.childCount; i++)
             {

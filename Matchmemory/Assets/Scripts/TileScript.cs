@@ -15,10 +15,13 @@ public class TileScript : MonoBehaviour
     public int ID { get => id; set => id = value; }
     public bool ActiveStatus { get => active; set => active = value; }
 
+
     private void Awake()
     {
         tileButton = GetComponent<Button>();
         tileButton.onClick.AddListener(OnTileTouched);
+
+        GameManager.DestroyTiles += KillMyself;
     }
 
     // Start is called before the first frame update
@@ -84,5 +87,15 @@ public class TileScript : MonoBehaviour
         Flipped = false;
         transform.DOLocalRotate(new Vector2(0, 0), flipSpeed, RotateMode.Fast)
             .OnComplete(() => tileButton.interactable = true);
+    }
+
+    public void KillMyself()
+    {
+        Destroy(gameObject);
+    }
+
+    private void OnDisable()
+    {
+        
     }
 }

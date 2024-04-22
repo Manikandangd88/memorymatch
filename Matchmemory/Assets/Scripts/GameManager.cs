@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,13 +17,10 @@ public class GameManager : MonoBehaviour
     public DataStore dataStore;
 
     public List<TileScript> TileScriptList = new List<TileScript>();
-    public List<TileScript> FlippedTiles = new List<TileScript>();
 
-    public int Score = 0;
+    public static Action DestroyTiles;
 
-    
-
-    
+    public int Score = 0;    
 
     private void Awake()
     {
@@ -86,5 +84,27 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
+    public void RestartGame()
+    {
+        Debug.Log("inside the restart game start ******* ");
+        primaryTile = null;
+        Score = 0;
+        
+        gridGenerator.Rows = 0;
+        gridGenerator.Columns = 0;
+        uiManager.mainMenuBtn.gameObject.SetActive(false);
+        //GameManager.instance.dataStore.ResetGameData();
+        //DestroyTiles?.Invoke();
+
+        for(int i = 0;i < TileScriptList.Count;i++)
+        {
+            Destroy(TileScriptList[i].gameObject);
+        }
+
+        TileScriptList.Clear();
+        Debug.Log($"The tilescript list is : {TileScriptList.Count}");
+
+        uiManager.MainMenuUI.SetActive(true);
+        Debug.Log("inside the restart game end ******* ");
+    }
 }

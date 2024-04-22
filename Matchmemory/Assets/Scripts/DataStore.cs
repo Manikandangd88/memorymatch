@@ -11,8 +11,10 @@ public class DataStore : MonoBehaviour
     public GameData gameData;
     [SerializeField] private Button Save;
     private string path = string.Empty;
+    [SerializeField] private bool isGameSaved = false;
+    public bool IsGameDataSaved = false;
 
-    public bool IsGameSaved = false;
+    public bool IsGameSaved { get => isGameSaved; set => isGameSaved = value; }
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +22,7 @@ public class DataStore : MonoBehaviour
         path = Application.dataPath + "/playerdata.json";
 
         if (File.Exists(path))
-            IsGameSaved = true;
+            IsGameDataSaved = true;
     }
 
     // Update is called once per frame
@@ -77,6 +79,8 @@ public class DataStore : MonoBehaviour
         {
             Debug.Log($"Unable to dave data : {e.Message} {e.StackTrace}");
         }
+
+        isGameSaved = true;
     }
      
     /// <summary>
@@ -87,6 +91,7 @@ public class DataStore : MonoBehaviour
      {
         gameData = new GameData();
         string jsonstring = File.ReadAllText(path);
+        IsGameDataSaved = true;
 
         try
         {
@@ -115,7 +120,16 @@ public class DataStore : MonoBehaviour
     public void ResetGameData()
     {
         if (File.Exists(path))
-        { File.Delete(path); IsGameSaved = false; }
+        { 
+            File.Delete(path); 
+            IsGameDataSaved = false; 
+        }
+        else
+        {
+            IsGameDataSaved = false;
+        }
+
+        gameData = null;
     }
 
     private void OnApplicationQuit()

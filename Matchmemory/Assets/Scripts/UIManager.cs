@@ -3,20 +3,25 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private Button submit;
 
-    [SerializeField] private GameObject MainMenuUI = null;
+    [SerializeField] private GameObject mainMenuUI = null;
     [SerializeField] private GameObject FetchRowsAndColumnsUI = null;
 
     [SerializeField] private TMP_InputField rows = null;
     [SerializeField] private TMP_InputField columns = null;
 
-    [SerializeField] private Button NewBtn;
-    [SerializeField] private Button LoadBtn;
-    [SerializeField] private Button QuitBtn;
+    [SerializeField] private Button newBtn;
+    [SerializeField] private Button loadBtn;
+    [SerializeField] private Button quitBtn;
+
+    public Button mainMenuBtn;
+
+    public GameObject MainMenuUI { get => mainMenuUI; set => mainMenuUI = value; }
 
     private void Awake()
     {
@@ -39,10 +44,12 @@ public class UIManager : MonoBehaviour
     {
         submit.onClick.AddListener(OnSubmitPressed);
 
-        MainMenuUI.SetActive(true);
-        NewBtn.onClick.AddListener(() => { MainMenu("new"); });
-        LoadBtn.onClick.AddListener(() => { MainMenu("load"); });
-        QuitBtn.onClick.AddListener(() => { MainMenu("quit"); });
+        mainMenuUI.SetActive(true);
+        newBtn.onClick.AddListener(() => { MainMenu("new"); });
+        loadBtn.onClick.AddListener(() => { MainMenu("load"); });
+        quitBtn.onClick.AddListener(() => { MainMenu("quit"); });
+        //quitBtn.onClick.AddListener(() => SceneManager.LoadScene("SampleScene"));
+        mainMenuBtn.onClick.AddListener(() => StartCoroutine(GoToMainMenu()));
     }
 
     private void MainMenu(string btn)
@@ -50,17 +57,17 @@ public class UIManager : MonoBehaviour
         switch(btn)
         {
             case "new":
-                MainMenuUI.SetActive(false);
+                mainMenuUI.SetActive(false);
                 GameManager.instance.dataStore.ResetGameData();
                 FetchRowsAndColumnsUI.SetActive(true);
                 break;
             case "load":
-                MainMenuUI.SetActive(false);
-                setGridLayoutProperties();
+                mainMenuUI.SetActive(false);
                 GameManager.instance.dataStore.LoadData();
+                mainMenuBtn.gameObject.SetActive(true);
                 break;
             case "quit":
-                MainMenuUI.SetActive(false);
+                mainMenuUI.SetActive(false);
                 Application.Quit();
                 break;
             default:
@@ -119,6 +126,18 @@ public class UIManager : MonoBehaviour
     {
         FetchRowsAndColumnsUI.SetActive(false);
         GameManager.instance.gridGenerator.GenerateTheGrid();
-        //StartCoroutine(GameManager.instance.gridGenerator.GenerateTheGrid());
+        mainMenuBtn.gameObject.SetActive(true);
+    }
+
+    //private void GoToMainMenu()
+    private IEnumerator GoToMainMenu()
+    {
+        //Save Game Data
+        GameManager.instance.dataStore.SaveData();
+        GameManager.instance.dataStore.IsGameDataSaved = false;
+        
+        yield return new WaitUntil(() => GameManager.instance.dataStore.IsGameSaved);
+        //Restart GamePlay
+        GameManager.instance.RestartGame();
     }
 }
