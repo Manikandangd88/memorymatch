@@ -74,7 +74,7 @@ public class GridGenerator : MonoBehaviour
     public void SetTheTileAttributes()
     {
         GameData gd = GameManager.instance.dataStore.gameData;
-
+        int imageincrementer = 0;
         int tempmaxtile = GameManager.instance.TotalTiles = currentRows * currentColumns;
         int temptileid = 0;
 
@@ -84,8 +84,12 @@ public class GridGenerator : MonoBehaviour
             {
                 GameManager.instance.TileScriptList[i].ID = gd.tiles[i].ID;
                 GameManager.instance.TileScriptList[i].name = gd.tiles[i].ID.ToString();
-                GameManager.instance.TileScriptList[i].transform.GetChild(0)
-                    .GetComponent<TextMeshProUGUI>().text = gd.tiles[i].ID.ToString();
+                //GameManager.instance.TileScriptList[i].SetTileProperties(GameManager.instance.uiManager.TileSprites[i], gd.tiles[i].ID);
+
+                GameManager.instance.TileScriptList[i].SetTileProperties(GameManager.instance.uiManager.TileSprites[gd.tiles[i].ID]);
+
+                //GameManager.instance.TileScriptList[i].transform.GetChild(0)
+                //    .GetComponent<TextMeshProUGUI>().text = gd.tiles[i].ID.ToString();
 
                 if (!gd.tiles[i].TileActiveStatus)
                     GameManager.instance.TileScriptList[i].OnTileMatch();
@@ -96,12 +100,19 @@ public class GridGenerator : MonoBehaviour
         {
             for (int i = 0; i < tempmaxtile; i += 2)
             {
+                imageincrementer++;
+
                 for (int j = i; j < i + 2; j++)
                 {
+                    //GameManager.instance.TileScriptList[j].SetTileProperties(GameManager.instance.uiManager.TileSprites[i], gd.tiles[j].ID);
+
                     GameManager.instance.TileScriptList[j].ID = temptileid;
                     GameManager.instance.TileScriptList[j].name = temptileid.ToString();
-                    GameManager.instance.TileScriptList[j].gameObject.transform.GetChild(0)
-                    .GetComponent<TextMeshProUGUI>().text = temptileid.ToString();
+
+                    GameManager.instance.TileScriptList[j].SetTileProperties(GameManager.instance.uiManager.TileSprites[temptileid]);
+
+                    //GameManager.instance.TileScriptList[j].gameObject.transform.GetChild(0)
+                    //.GetComponent<TextMeshProUGUI>().text = temptileid.ToString();
 
                     GameManager.instance.TileScriptList[j].transform.SetSiblingIndex(Random.Range(0, tempmaxtile));
                 }

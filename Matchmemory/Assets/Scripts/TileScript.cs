@@ -12,6 +12,8 @@ public class TileScript : MonoBehaviour
     private bool active = true;
     private Button tileButton;
 
+    public Image TileImage = null;
+
     public int ID { get => id; set => id = value; }
     public bool ActiveStatus { get => active; set => active = value; }
 
@@ -34,6 +36,14 @@ public class TileScript : MonoBehaviour
     void Update()
     {
         
+    }
+
+    //public void SetTileProperties(Sprite img, int tileid)
+    public void SetTileProperties(Sprite img)
+    {
+        //id = tileid;
+        //gameObject.name = id.ToString();
+        TileImage.sprite = img;
     }
 
     public void OnTileTouched()

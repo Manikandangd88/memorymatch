@@ -24,6 +24,7 @@ public class UIManager : MonoBehaviour
 
     public Button mainMenuBtn;
 
+    public Sprite[] TileSprites;
     public GameObject MainMenuUI { get => mainMenuUI; set => mainMenuUI = value; }
 
     private void Awake()
@@ -122,34 +123,36 @@ public class UIManager : MonoBehaviour
         if (!rows.IsActive() || !columns.IsActive())
             return;
 
+        
         if (value == 0) 
         {
-            GameManager.instance.gridGenerator.Rows = int.Parse(rows.text);
-
-            if(GameManager.instance.gridGenerator.GridLayoutComponent.constraint ==
-                GridLayoutGroup.Constraint.FixedRowCount)
-            {
-                GameManager.instance.gridGenerator.GridLayoutComponent.constraintCount =
-                GameManager.instance.gridGenerator.Rows;
-            }
-            
+            if(rows.text != string.Empty)
+                GameManager.instance.gridGenerator.Rows = int.Parse(rows.text);
         }
         else if (value == 1)
-        { 
-            GameManager.instance.gridGenerator.Columns = int.Parse(columns.text);
-
-            if (GameManager.instance.gridGenerator.GridLayoutComponent.constraint ==
-                GridLayoutGroup.Constraint.FixedColumnCount)
-            {
-                GameManager.instance.gridGenerator.GridLayoutComponent.constraintCount =
-                GameManager.instance.gridGenerator.Columns;
-            }
+        {
+            if (columns.text != string.Empty)
+                GameManager.instance.gridGenerator.Columns = int.Parse(columns.text);
         }
     }
 
     private void OnSubmitPressed()
     {
-        if(rows.text == string.Empty || columns.text == string.Empty)
+        if (GameManager.instance.gridGenerator.GridLayoutComponent.constraint ==
+                GridLayoutGroup.Constraint.FixedRowCount)
+        {
+            GameManager.instance.gridGenerator.GridLayoutComponent.constraintCount =
+            GameManager.instance.gridGenerator.Rows;
+        }
+
+        if (GameManager.instance.gridGenerator.GridLayoutComponent.constraint ==
+                GridLayoutGroup.Constraint.FixedColumnCount)
+        {
+            GameManager.instance.gridGenerator.GridLayoutComponent.constraintCount =
+            GameManager.instance.gridGenerator.Columns;
+        }
+
+        if (rows.text == string.Empty || columns.text == string.Empty)
         {
             GameManager.instance.popupManager.ShowFeedback("submiterror");
             return;
@@ -171,7 +174,6 @@ public class UIManager : MonoBehaviour
 
         FetchRowsAndColumnsUI.SetActive(false);
         GameManager.instance.gridGenerator.GenerateTheGrid();
-        //mainMenuBtn.gameObject.SetActive(true);
 
         scoreText.text = $"Score : {0}";
         rows.text = string.Empty;
